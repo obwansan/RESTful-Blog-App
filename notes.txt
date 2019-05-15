@@ -1,0 +1,27 @@
+// Compile the Blog schema into a Blog model (kind of like a class in PHP) that can 
+// be used to create, read, update and delete blogs in the DB.
+// You pass the singular version of your model (called "Blog") and mongoose automagically 
+// creates a pluralised collection in the database (e.g. db.blogs).
+// Convention is to capitalize a model ("Blog"), just like with PHP classes...
+
+var Blog = mongoose.model('Blog', blogSchema);
+
+
+// INDEX restful route
+// After the '/blogs' route is hit (i.e. a get request to '/blogs' is performed by entering 
+// that URL), a callback function is called. It's passed the request and response object (how?)
+// When Blog.find() returns all blogs from the mongoDB:
+// - all the blogs are returned and passed as an object into the callback. So is an error message, if there is one.
+// - the passed callback function is called. The inner callback has access to the response object
+// passed into the outer callback (for res.render) and all the blogs. These are passed into index.ejs
+// as the 'blogs' value on the 'blogs' key (which can be used in index.ejs).
+
+app.get('/blogs', function(req, res) {
+  Blog.find({}, function(err, blogs) {
+    if(err) {
+      console.log(err);
+    } else {
+      res.render('index', {blogs: blogs});
+    }
+  });
+});
