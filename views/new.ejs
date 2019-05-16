@@ -13,10 +13,18 @@
     </div>    
     <div class="field">
       <label>Blog Content</label>
-      <textarea name="blog[body]" cols="30" rows="10" placeholder="Blog post goes here"></textarea>
+      <textarea name="blog[body]" cols="30" rows="10" placeholder="Blog post goes here" required></textarea>
     </div>
     <input type="submit" class="ui violet big basic button">
   </form>
 </div>
 
 <% include ./partials/footer.ejs %>
+
+<%# 
+Explanation of: <input type="text" name="blog[title]"> 
+
+What this does is, instead of making the value for title available directly from req.body.title it will put it inside of an object, like so: req.body.blog.title 
+
+Now all of the values from the inputs in the form get added into one object (req.body.blog) and you can easily input that data into the database simply by passing in req.body.blog to Blog.create() 
+%>

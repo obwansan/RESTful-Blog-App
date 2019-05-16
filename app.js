@@ -47,7 +47,7 @@ app.get('/blogs/new', function(req, res) {
   res.render('new');
 });
 
-// CREATE ROUTE
+// CREATE restful route
 app.post('/blogs', function(req, res) {
   // Create blog
   Blog.create(req.body.blog, function(err, newBlog) {
@@ -58,6 +58,19 @@ app.post('/blogs', function(req, res) {
       res.redirect('/blogs');
     }
   }) 
+});
+
+// SHOW restful route
+// Clicking the 'Read More' button in index.js triggers a get request and hits this route.
+// req.params.id is the :id in the URL. It's stored in req.params 
+app.get('/blogs/:id', function(req, res) {
+  Blog.findById(req.params.id, function(err, foundBlog) {
+    if(err) {
+      res.redirect("/blogs");
+    } else {
+      res.render("show", {blog: foundBlog});
+    }
+  })
 });
 
 // Start the server, running on port 3000
