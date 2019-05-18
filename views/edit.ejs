@@ -1,0 +1,37 @@
+<% include ./partials/header.ejs %>
+
+<div class="ui main text container segment">
+  <div class="ui huge header">Edit <%= blog.title %></div>
+  <form class="ui form" action="/blogs/<%= blog._id %>?_method=PUT" method="POST">
+    <div class="field">
+      <label>Title</label>
+      <input type="text" name="blog[title]" value="<%= blog.title %>">
+    </div>
+    <div class="field">
+      <label>Image</label>
+      <input type="text" name="blog[image]" value="<%= blog.image %>">
+    </div>    
+    <div class="field">
+      <label>Blog Content</label>
+      <textarea name="blog[body]" cols="30" rows="10" required><%= blog.body %></textarea>
+    </div>
+    <input type="submit" class="ui violet big basic button">
+  </form>
+</div>
+
+<% include ./partials/footer.ejs %>
+
+<%# 
+Explanation of: <input type="text" name="blog[title]"> 
+What this does is, instead of making the value for title available directly from req.body.title it will put it inside of an object, like so: req.body.blog.title 
+Now all of the values from the inputs in the form get added into one object (req.body.blog) and you can easily input that data into the database simply by passing in req.body.blog to Blog.create() 
+
+Explanation of ?_method=PUT
+This is a 'method override'. Have to install a method-override package that checks the form action attribute and overrides the method attribute with the override method (if present). This is needed because HTML forms can only process  GET and POST requests! 
+
+If you don't use method-override, the method defaults to a GET request and bungs all the form data in the URL!
+
+You could just use POST and a differently named route (e.g. updateBlog/:id) for the UPDATE route, but that wouldn't be following the RESTful conventions of using a PUT request and just the plural DB name (e.g. app.put("blogs/:id") ).
+
+NOTE: GET and POST are the only two functional types of HTTP request. PUT, DELETE, PATCH etc are just 'syntactic sugar', i.e. syntax that makes it easier for devs to understand what's doing what.
+%>

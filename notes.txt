@@ -1,3 +1,10 @@
+/* How does 'Routing'work? */
+
+// 'Routing' refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) using a specific HTTP request method (GET, POST, and so on).
+// The application “listens” for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function.
+
+/* How does the mongoose model work? */
+
 // Compile the Blog schema into a Blog model (kind of like a class in PHP) that can 
 // be used to create, read, update and delete blogs in the DB.
 // You pass the singular version of your model (called "Blog") and mongoose automagically 
