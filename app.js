@@ -1,5 +1,6 @@
-var bodyParser = require('body-parser'),
+var expressSanitizer = require('express-sanitizer'),
 methodOverride = require('method-override'),
+bodyParser = require('body-parser'),
 mongoose       = require('mongoose')
 express        = require('express'),
 app            = express();
@@ -7,19 +8,17 @@ app            = express();
 // Calling express() assigns an 'instance of the express class' (i.e. an object) to the variable 'app'.
 // So you can then use all the methods on the app object. So the app itself is just an object with methods!
 
+// APP CONFIG
 // Tell mongoose to connect to the server we have running (mongod)
 // Connect to restful_blog_app DB. If the app DB doesn't exist, it will be created and connected to.
 mongoose.connect("mongodb://localhost/restful_blog_app", { useNewUrlParser: true });
-
 // Set the app to use ejs as it's template engine (don't need to use .ejs prefix on rendered files)
 app.set("view engine", "ejs");
-
 // Allows us to configure our own stylesheet in public folder
 app.use(express.static("public")); 
-
 // Have to configure this to use req.body.whatever
 app.use(bodyParser.urlencoded({extended:true}));
-
+app.use(expressSanitizer());
 // The argument is what method-override should look for in the URL.
 // Tells app, when you get a request that has _method as a parameter in the query string, take whatever type _method is assigned and treat the request as that type (see form action attribute in app.js)
 app.use(methodOverride("_method"));
@@ -62,6 +61,8 @@ app.get('/blogs/new', function(req, res) {
 
 // CREATE restful route
 app.post('/blogs', function(req, res) {
+  // Prevent XSS 
+  req.body.blog.body = req.sanitize(req.body.blog.body);
   // Create blog in db.blogs database
   Blog.create(req.body.blog, function(err, newBlog) {
     if(err) {
@@ -103,6 +104,8 @@ app.get('/blogs/:id/edit', function(req, res) {
 
 // UPDATE restful route
 app.put('/blogs/:id', function(req, res) {
+  // Prevent XSS
+  req.body.blog.body = req.sanitize(req.body.blog.body);
   // Find the blog (object or 'document') using its ID and update it using the req.body.blog object.
   // Potentially confusing as req.body.blog has a property called 'body' (as well as title and image).
   Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog) {
