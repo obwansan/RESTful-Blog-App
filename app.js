@@ -115,6 +115,20 @@ app.put('/blogs/:id', function(req, res) {
   })
 });
 
+// DELETE restful route
+app.delete('/blogs/:id', function(req, res) {
+  // destroy blog
+  Blog.findByIdAndRemove(req.params.id, function(err) {
+    if(err) {
+      res.redirect('/blogs');
+    } else {
+      res.redirect('/blogs');
+    }
+  })
+  // redirect somewhere
+
+});
+
 // Start the server, running on port 3000
 app.listen(3000, function(req, res) {
   console.log("restful blog app server is running...")
